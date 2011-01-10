@@ -1,66 +1,88 @@
-// A front-end that proxies requests to downstream servers depending on the
+// A server that proxies requests to downstream servers depending on the
 // request path.
 
 var http = require('http'),
     sys  = require('sys');
 
-// Example:
-//
-// var mappings = [
-//   [/^\/foo/, 'host1',    80],
-//   [/^\/bar/, 'host2',  1234]
-// ];
+var mappingDefaults = {
+  host: 'localhost',
+  port: '80'
+};
 
-var mappings = [];
-
-var resolveDownstream = function(path) {
-  var i, ii = mappings.length;
-  for (i = 0; i < ii; i++) {
-    if (path.match(mappings[i][0])) {
+var resolveDownstream = function(mappings, host, path) {
+  for (var i = 0; i < mappings.length; i++) {
+    var m = mappings[i];
+    if ((m.matchHost === null || (host || '').match(m.matchHost)) &&
+        (m.matchPath === null || path.match(m.matchPath))) {
       return {
-        host: mappings[i][1],
-        port: mappings[i][2]
+        host: m.host || mappingDefaults.host,
+        port: m.port || mappingDefaults.port
       };
     }
   }
   return null;
 };
 
-var server = function(request, response) {
-  var downstream = resolveDownstream(request.url);
+exports.run = function(mappings, listenPort){
+  var server = function(request, response) {
+    var host;
+    if (request.headers.host) {
+      host = request.headers.host.split(':')[0];
+    }
 
-  if (downstream == null) {
-    sys.log('401 ' + request.url);
-    response.writeHead(401);
-    response.end();
-    return;
-  }
+    var downstream = resolveDownstream(mappings, host, request.url);
 
-  request.headers.host = downstream.host;
+    var log = function(statusCode){
+      sys.log(
+        statusCode + ' ' +
+        (downstream ? downstream.host + ':' + downstream.port : '') +
+        request.url
+      );
+    };
 
-  var downstreamRequest =
-    http.createClient(downstream.port, downstream.host).
-    request(request.method, request.url, request.headers);
+    if (downstream === null) {
+      log(401)
+      response.writeHead(401);
+      response.end();
+      return;
+    }
 
-  downstreamRequest.on('response', function(downstreamResponse) {
-    sys.log(downstreamResponse.statusCode + ' ' + downstream.host + ':' + downstream.port + request.url);
+    var downstreamClient = http.createClient(downstream.port, downstream.host)
 
-    response.writeHead(downstreamResponse.statusCode, downstreamResponse.headers);
-    downstreamResponse.on('data', function(chunk) {
-      response.write(chunk, 'binary');
-    });
-    downstreamResponse.on('end', function() {
+    downstreamClient.on('error', function(err){
+      log(500);
+      response.writeHead(500);
       response.end();
     });
-  });
 
-  request.on('data', function(chunk) {
-    downstreamRequest.write(chunk, 'binary');
-  });
+    request.headers.host = downstream.host;
+    var downstreamRequest = downstreamClient.request(request.method, request.url, request.headers);
 
-  request.on('end', function() {
-    downstreamRequest.end();
-  });
-};
+    downstreamRequest.on('response', function(downstreamResponse) {
+      log(downstreamResponse.statusCode);
 
-http.createServer(server).listen(8080);
+      response.writeHead(
+        downstreamResponse.statusCode,
+        downstreamResponse.headers
+      );
+
+      downstreamResponse.on('data', function(chunk) {
+        response.write(chunk, 'binary');
+      });
+
+      downstreamResponse.on('end', function() {
+        response.end();
+      });
+    });
+
+    request.on('data', function(chunk) {
+      downstreamRequest.write(chunk, 'binary');
+    });
+
+    request.on('end', function() {
+      downstreamRequest.end();
+    });
+  };
+
+  http.createServer(server).listen(listenPort);
+}
