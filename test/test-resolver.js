@@ -20,6 +20,18 @@ exports['default should match anything and return default host and port'] = func
   test.done();
 };
 
+exports['default should match any host when host is missing'] = function(test){
+  var mappings = [{}];
+  var request = mockRequest();
+  request.headers.host = null;
+
+  var result = resolver.resolve(mappings, request);
+
+  test.equals(result.host, 'localhost');
+  test.equals(result.port, 80);
+  test.done();
+};
+
 exports['should match by host'] = function(test){
   var mappings = [
     {
