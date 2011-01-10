@@ -35,4 +35,4 @@ Prerequisites
 
 To run the tests, you will also need:
 
-* nodeunit (to run tests)
+* nodeunit
