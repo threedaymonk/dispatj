@@ -32,3 +32,7 @@ Prerequisites
 -------------
 
 * node.js (tested against 0.3.4)
+
+To run the tests, you will also need:
+
+* nodeunit (to run tests)
