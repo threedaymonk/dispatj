@@ -27,3 +27,8 @@ The following keys can be specified in a mapping:
 * `matchHost` — Regular expression which request host must match. Default: match any host.
 * `host` — Proxy the request to this host. Default: `localhost`.
 * `port` — Proxy the request to this port. Default: `80`.
+
+Prerequisites
+-------------
+
+* node.js (tested against 0.3.4)
