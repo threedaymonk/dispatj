@@ -41,13 +41,13 @@ exports.run = function(mappings, listenPort){
     };
 
     if (downstream === null) {
-      log(401)
+      log(401);
       response.writeHead(401);
       response.end();
       return;
     }
 
-    var downstreamClient = http.createClient(downstream.port, downstream.host)
+    var downstreamClient = http.createClient(downstream.port, downstream.host);
 
     downstreamClient.on('error', function(err){
       log(500);
@@ -85,4 +85,4 @@ exports.run = function(mappings, listenPort){
   };
 
   http.createServer(server).listen(listenPort);
-}
+};
