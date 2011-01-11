@@ -2,7 +2,7 @@ Dispatj
 =======
 
 A server that proxies requests to downstream servers depending on the request
-path in about 90 lines of JavaScript. It's like Apache with mod_proxy, only
+path in under 70 lines of JavaScript. It's like Apache with mod_proxy, only
 simpler.
 
 Usage
