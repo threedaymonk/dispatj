@@ -35,8 +35,9 @@ The following keys can be specified in a mapping:
 Prerequisites
 -------------
 
-* node.js (tested against 0.3.4)
+* [node.js](http://nodejs.org/) (tested against 0.3.4)
+* [async](https://github.com/caolan/async)
 
 To run the tests, you will also need:
 
-* nodeunit
+* [nodeunit](http://github.com/caolan/nodeunit)
