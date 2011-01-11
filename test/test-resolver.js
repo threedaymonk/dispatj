@@ -13,11 +13,11 @@ exports['default should match anything and return default host and port'] = func
   var mappings = [{}];
   var request = mockRequest();
 
-  var result = resolver.resolve(mappings, request);
-
-  test.equals(result.host, 'localhost');
-  test.equals(result.port, 80);
-  test.done();
+  resolver.resolve(mappings, request, function(result){
+    test.equals(result.host, 'localhost');
+    test.equals(result.port, 80);
+    test.done();
+  });
 };
 
 exports['default should match any host when host is missing'] = function(test){
@@ -25,11 +25,11 @@ exports['default should match any host when host is missing'] = function(test){
   var request = mockRequest();
   request.headers.host = null;
 
-  var result = resolver.resolve(mappings, request);
-
-  test.equals(result.host, 'localhost');
-  test.equals(result.port, 80);
-  test.done();
+  resolver.resolve(mappings, request, function(result){
+    test.equals(result.host, 'localhost');
+    test.equals(result.port, 80);
+    test.done();
+  });
 };
 
 exports['should match by host'] = function(test){
@@ -48,11 +48,11 @@ exports['should match by host'] = function(test){
   var request = mockRequest();
   request.headers.host = 'b.example.com:8080';
 
-  var result = resolver.resolve(mappings, request);
-
-  test.equals(result.host, '10.0.0.101');
-  test.equals(result.port, 101);
-  test.done();
+  resolver.resolve(mappings, request, function(result){
+    test.equals(result.host, '10.0.0.101');
+    test.equals(result.port, 101);
+    test.done();
+  });
 };
 
 exports['should match by path'] = function(test){
@@ -71,11 +71,11 @@ exports['should match by path'] = function(test){
   var request = mockRequest();
   request.url = '/bar/x?a=1';
 
-  var result = resolver.resolve(mappings, request);
-
-  test.equals(result.host, '10.0.0.101');
-  test.equals(result.port, 101);
-  test.done();
+  resolver.resolve(mappings, request, function(result){
+    test.equals(result.host, '10.0.0.101');
+    test.equals(result.port, 101);
+    test.done();
+  });
 };
 
 exports['should pass headers through'] = function(test){
@@ -83,10 +83,10 @@ exports['should pass headers through'] = function(test){
   var request = mockRequest();
   request.headers.arbitrary = 'whatever';
 
-  var result = resolver.resolve(mappings, request);
-
-  test.equals(result.headers.arbitrary, 'whatever');
-  test.done();
+  resolver.resolve(mappings, request, function(result){
+    test.equals(result.headers.arbitrary, 'whatever');
+    test.done();
+  });
 };
 
 exports['should pass path through'] = function(test){
@@ -94,8 +94,8 @@ exports['should pass path through'] = function(test){
   var request = mockRequest();
   request.url = '/a/b?x=y';
 
-  var result = resolver.resolve(mappings, request);
-
-  test.equals(result.url, '/a/b?x=y');
-  test.done();
+  resolver.resolve(mappings, request, function(result){
+    test.equals(result.url, '/a/b?x=y');
+    test.done();
+  });
 };
