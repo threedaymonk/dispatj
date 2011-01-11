@@ -20,7 +20,7 @@ port 8088 on `localhost`, and to a path beginning with `/bar` to port 80 on
     var listenPort = 8080;
 
     var dispatj = require('dispatj');
-    dispatj.run(mappings, listenPort);
+    dispatj.run(mappings, listenPort, sys.log);
 
 Mappings
 --------
