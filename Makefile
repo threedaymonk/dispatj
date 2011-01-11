@@ -1,4 +1,4 @@
-.PHONY:	all lint test
+.PHONY:	all lint test loc
 
 SRC_ROOT=./lib
 TEST_ROOT=./test
@@ -10,3 +10,6 @@ lint:
 
 test:
 	@find $(TEST_ROOT) -name 'test-*.js' -exec nodeunit {} \;
+
+loc:
+	@grep -r --binary-files=without-match . $(SRC_ROOT) | wc -l | xargs -I_ echo _ LoC
