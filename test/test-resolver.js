@@ -78,6 +78,21 @@ exports['should match by path'] = function(test){
   });
 };
 
+exports['should call back with null if nothing matched'] = function(test){
+  var mappings = [
+    {
+      matchPath: '^/foo',
+    }
+  ];
+  var request = mockRequest();
+  request.url = '/bar';
+
+  resolver.resolve(mappings, request, function(result){
+    test.equals(result, null);
+    test.done();
+  });
+};
+
 exports['should pass headers through'] = function(test){
   var mappings = [{}];
   var request = mockRequest();
