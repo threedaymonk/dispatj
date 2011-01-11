@@ -12,6 +12,9 @@ This example will proxy requests on any host to a path beginning with `/foo` to
 port 8088 on `localhost`, and to a path beginning with `/bar` to port 80 on
 `10.0.0.4`:
 
+    var dispatj = require('dispatj'),
+        sys = require('sys');
+
     var mappings = [
       { matchPath: '^/foo', port: 8088 },
       { matchPath: '^/bar', host: '10.0.0.4' }
@@ -19,7 +22,6 @@ port 8088 on `localhost`, and to a path beginning with `/bar` to port 80 on
 
     var listenPort = 8080;
 
-    var dispatj = require('dispatj');
     dispatj.run(mappings, listenPort, sys.log);
 
 Mappings
