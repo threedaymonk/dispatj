@@ -8,6 +8,10 @@ simpler.
 Usage
 -----
 
+This example will proxy requests on any host to a path beginning with `/foo` to
+port 8088 on `localhost`, and to a path beginning with `/bar` to port 80 on
+`10.0.0.4`:
+
     var mappings = [
       { matchPath: '^/foo', port: 8088 },
       { matchPath: '^/bar', host: '10.0.0.4' }
