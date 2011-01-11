@@ -42,3 +42,6 @@ Prerequisites
 To run the tests, you will also need:
 
 * [nodeunit](http://github.com/caolan/nodeunit)
+* [jslint](https://github.com/reid/node-jslint)
+
+All dependencies can be installed via [npm](http://npmjs.org/).
