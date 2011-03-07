@@ -38,8 +38,6 @@ Prerequisites
 -------------
 
 * [node.js](http://nodejs.org/) (tested against 0.3.4)
-* [async](https://github.com/caolan/async)
-* [underscore](http://documentcloud.github.com/underscore/)
 
 To run the tests, you will also need:
 
